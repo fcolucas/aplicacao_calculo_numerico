@@ -323,9 +323,15 @@ int main()
             case 'C':
                 printf("\n***Conversao***\n");
                 printf("-> Digite o numero a ser convertido: ");
-                scanf("%lf", &num);
+                char s[50]; //String auxiliar para fazer a validação do número.
+				scanf("%s", s);
                 fflush(stdin);
-                conversao(num);
+                if((strstr(s, ",") != NULL) || ((strstr(s, ",") == NULL) && (strstr(s, ".") == NULL))){ //Verifica se o valor digitado pelo usuário tem uma vírgula, ou se não contém uma virgular nem um ponto ou um não contém espaço em branco. Caso contrário, devolverá um erro.
+                	sscanf(s, "%lf", &num);
+					conversao(num);	
+				}else{
+					printf("Wrong format, please try again.");
+				}
                 break;
 
             case 'S':
