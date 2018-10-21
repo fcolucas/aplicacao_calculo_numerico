@@ -32,15 +32,15 @@ double *alocaFuncao(int grau){
 }//alocaFuncao()
 
 double **alocaMatriz(int l, int c){
-	/*Se houver memoria disponivel, aloca 
-	uma matriz de double com l linhas e c 
+	/*Se houver memoria disponivel, aloca
+	uma matriz de double com l linhas e c
 	colunas e devolve um ponteiro para a matriz.
 	Caso contrario, devolve o ponteiro NULL.*/
 	double **M;
 	int i, j;
 	M = malloc(sizeof(double *)*l);
 	if (M == NULL) return NULL; /*falta de memória*/
-	
+
 	for (i=0; i<l; i++){
 		M[i] = malloc(sizeof(double)*c);
 		if(M[i] == NULL){ /*falta de memória*/
@@ -50,7 +50,6 @@ double **alocaMatriz(int l, int c){
 			return NULL;
 		}
 	}
-	
 	return M;
 }//alocaMatriz()
 
@@ -74,10 +73,11 @@ void leMatriz(double **M, int n){
 
 	M = alocaMatriz(n, n+1);
 	if(M == NULL) printf("Memória insuficiente!");
-	
-	for(i = 0; i < n; i++){
-		for(j = 0; j < n + 1; j++){
-			fscanf(arquivo, "%lf", &M[i][j]);
+	else {
+		for(i = 0; i < n; i++){
+			for(j = 0; j < n + 1; j++){
+				fscanf(arquivo, "%lf", &M[i][j]);
+			}
 		}
 	}
 	fclose(arquivo);
@@ -196,8 +196,8 @@ void solucaoSistema(double **M, int n, double *x){
 }//solucaoSistema()
 
 void metJordan(double **M, int n){
-    /*A função aplica o metodo de Jordan na matriz M, ou seja, 
-	transforma a matriz em uma matriz diagonal. No final, 
+    /*A função aplica o metodo de Jordan na matriz M, ou seja,
+	transforma a matriz em uma matriz diagonal. No final,
 	calcula a solução desse SL.
     */
     int l, c, k, i, j;
@@ -262,7 +262,7 @@ void lagrange(int grau, double *coeficientes){
 	    int i;
 	    double aux = 0;
 	    for(i = 0; i < grau ; i++){// Achar raiz superior
-	        if(coeficientes[i] < 0){
+	        if(!(coeficientes[i] >= 0)){
 	            if(aux < grau - i){
 	                aux = grau - i;
 	           }
@@ -270,77 +270,78 @@ void lagrange(int grau, double *coeficientes){
 	    }
 	    return aux;
 	}
-	
+
 	double encontraB(int grau, double *coeficientes){
 		int i;
 		double aux1 = 0;
 		double modulo = -1;
 		for(i = 0; i <= grau ; i++){
-			if(coeficientes[i] < 0){
+			if(!(coeficientes[i] >= 0)){
 		    	if(aux1 > coeficientes[i]){
 		        	aux1 = coeficientes[i];
 		   		}
 			}
-		}	
+		}
 		return aux1*modulo;
 	}
-	
-	double imprimeVetor(int n, double *v){
+
+	void imprimeVetor(int n, double *v){
 		int i;
 		printf("[");
 		for(i=n; i>=0; i--){
-			printf("%lf ", v[i]);
+			printf("%4.3lf ", v[i]);
 		}
 		printf("]\n");
 	}
-	
-	double inverteSinal(int n, double *v){
+
+	void inverteSinal(int n, double *v){
 		int j;
 		for(j=n; j>=0; j--){
-			v[j] = -1.0 * v[j];
+			v[j] = - v[j];
 		}
 	}
-	
+
 	int i;
     double grau_double = grau, K[4], B[4], an[4], limites[4];
     double *coeficientes_inverso = (double*)malloc(sizeof(double)*(grau+1)); //equação com os indices invertidos
     double *coeficientes_ex_invertido = (double*)malloc(sizeof(double)*(grau+1));//equação com os expoentes impares invertidos
     double *coeficientes_ex_invertido_ex = (double*)malloc(sizeof(double)*(grau+1));//equação invertida com os expoentes impares invertidos
-	
-	if(coeficientes[0] < 0) inverteSinal(grau, coeficientes);	
-	
+
     //obtém a equação com os indices invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_inverso[i] = coeficientes[grau-i];
     }
-    if(coeficientes_inverso[0] < 0) inverteSinal(grau, coeficientes_inverso);
-    
+
     //obtém a equação com os expoentes impares invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_ex_invertido[i] = coeficientes[i];
         if(i%2 != 0 && i != 0){
-            coeficientes_ex_invertido[i] = coeficientes_ex_invertido[i] * - 1.0;
+            coeficientes_ex_invertido[i] = -coeficientes_ex_invertido[i];
         }
     }
-    if(coeficientes_ex_invertido[0] < 0) inverteSinal(grau, coeficientes_ex_invertido);
-    
+
     //obtém a equação invertida com os expoentes impares invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_ex_invertido_ex[i] = coeficientes_ex_invertido[grau-i];
     }
-	if(coeficientes_ex_invertido_ex[0] < 0) inverteSinal(grau, coeficientes_ex_invertido_ex);
-	
+
+    if(coeficientes_inverso[0] < ERRO) inverteSinal(grau, coeficientes_inverso);
+
+    if(coeficientes_ex_invertido[0] < ERRO) inverteSinal(grau, coeficientes_ex_invertido);
+
+	if(coeficientes_ex_invertido_ex[0] < ERRO) inverteSinal(grau, coeficientes_ex_invertido_ex);
+
 	imprimeVetor(grau, coeficientes);
 	imprimeVetor(grau, coeficientes_inverso);
 	imprimeVetor(grau, coeficientes_ex_invertido);
 	imprimeVetor(grau, coeficientes_ex_invertido_ex);
-	
+
     //calculando limite positivo
     // econtrando limite superior
     K[0] = encontraK(grau,coeficientes);
     B[0] = encontraB(grau,coeficientes);
     an[0] = coeficientes[0];
-    limites[0] = 1 + pow(B[0]/an[0], 1.0/(grau_double-K[0]));
+    limites[0] = 1.0 + pow(B[0]/an[0], 1.0/(grau_double-K[0]));
 
     // econtrando limite inferior
     K[1] = encontraK(grau,coeficientes_inverso);
@@ -361,15 +362,17 @@ void lagrange(int grau, double *coeficientes){
     an[3] = coeficientes_ex_invertido_ex[0];
     limites[3] = -1.0/(1 + pow(B[3]/an[3], 1.0/(grau_double-K[3])));
 
+    imprimeVetor(4, limites);
+
     //Mostra a respota
     printf("\n\nLimite Positivo: %10.4lf %c%c X+ %c%c %10.4lf \n", limites[1], 60, 61, 60, 61, limites[0]);
-    printf("Limite Negativo: %10.4lf %c%c X- %c%c%10.4lf \n", limites[2], 60, 61, 60, 61, limites[3]);
+    printf("Limite Negativo: %10.4lf %c%c X- %c%c %10.4lf \n", limites[2], 60, 61, 60, 61, limites[3]);
 
 }
 
 int bolzano(double a, double b, int grau, double *funcao){
     /*A função verifica se entre os intervalos dados, existe
-    uma quantidade ímpar de raízes numa equação algébrica. 
+    uma quantidade ímpar de raízes numa equação algébrica.
 	Caso positivo, retorna 1. Se não, retorna 0.*/
     double Fa, Fb;
     Fa = calculaFuncao(grau, funcao, a);
@@ -409,13 +412,12 @@ void metBissecao(int grau, double *funcao){
     else printf("O numero de raízes no intervalo [%lf, %lf] e par\n", a, b);
 }//metBissecao()
 
-int main()
-{
+int main() {
     setlocale(LC_ALL, "Portuguese");
     int menu = 1;
     char op;
     double num;
-    
+
     while(menu){
         printf("--------EP1--------\n");
         printf("C - Conversão\n");
@@ -440,6 +442,9 @@ int main()
             case 'S':
                 printf("\n***Sistema Linear***\n");
                 leMatriz(M, n);
+                if(M == NULL){
+                	break;
+				}
                 printf("Matriz: \n");
                 imprimeMatriz(M, n, n+1);
                 printf("\n");
@@ -452,8 +457,15 @@ int main()
                 printf("Digite o grau do polinomio: ");
                 scanf("%d", &grau);
                 funcao = alocaFuncao(grau+1);
-                lagrange(grau, funcao);
-                metBissecao(grau, funcao);
+                if((funcao[0] > 0 & funcao[n] != 0) & funcao != NULL){
+	                lagrange(grau, funcao);
+	                metBissecao(grau, funcao);
+	            }
+	            else if(funcao == NULL){
+	            	printf("Memória insuficiente!\n");
+	            	break;
+				}
+	            else printf("A função deve ter o a%d maior que 0 e a0 diferente de 0", grau);
                 printf("\n");
                 break;
 
