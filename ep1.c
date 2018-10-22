@@ -1,7 +1,7 @@
-/* 
+/*
 	1ª Exercício-Programa de Cálculo Numérico
 	Engenharia de Computação - 2018.2
-	
+
 	Equipe: Anathália Maria Moreira Izidro Silva
 			Anderson de Alencar Bezzera Souza
 			Francisco Lucas Lima da Silva
@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <locale.h>
 #include <string.h>
 #include <ctype.h>
 #define ERRO 0.00000001
@@ -37,6 +36,7 @@ double *alocaFuncao(int grau){
         for(i=grau; i>=0; i--){
             printf("Digite o coeficiente a%d: ", i);
             scanf("%lf", &v[grau-i]);
+            fflush(stdin);
         }
         return v;
     }
@@ -86,11 +86,12 @@ void leMatriz(){
 
 	M = alocaMatriz(n, n + 1);
 	if(M == NULL)
-		printf("Memória insuficiente!");
-	
-	for(i = 0; i < n; i++){
-		for(j = 0; j < n + 1; j++){
-			fscanf(arquivo, "%lf", &M[i][j]);
+		printf("Mem%cria insuficiente!", 162);
+	else{
+		for(i = 0; i < n; i++){
+			for(j = 0; j < n + 1; j++){
+				fscanf(arquivo, "%lf", &M[i][j]);
+			}
 		}
 	}
 	fclose(arquivo);
@@ -140,7 +141,7 @@ void conversao(double num){
 			}
 			parteInteira += quociente%base[i]*pow(10, j);
 			if(base[i] == 2){
-				printf("Binário: %d.", (int)parteInteira);
+				printf("Bin%crio: %d.", 160, (int)parteInteira);
 			}else{
 				printf("\nOctal: %d.", (int)parteInteira);
 			}
@@ -151,7 +152,7 @@ void conversao(double num){
 			printf("\nHexadecimal: %X.", (int)num);
 		}
 
-		while(j <= precisao && parteFracionaria != 0){    //Imprime a parte fracionária
+		while(j <= precisao && parteFracionaria != 0){ //Imprime a parte fracionária
 			parteFracionaria *= base[i];
 			aux = (int)parteFracionaria;
 
@@ -172,7 +173,7 @@ void conversao(double num){
 int sretro(double **M, int n){
 	/* Algoritmo de substituição retroativa.
 	Recebe m, a matriz aumentada de um SL TS com n variaveis.
-	Se o sistema linear for determinado, armazena em x a soluÃ§Ã£o
+	Se o sistema linear for determinado, armazena em x a solução
 	no SL e devolve 0.
 	Se for indeterminado, armazena em x uma solução do SL e
 	devolve 1. 
@@ -223,12 +224,12 @@ void metJordan(double **M, int n){
     val = alocaVariavel(n);
 
     for(j=0; j<n; j++){
-        if(fabs(M[j][j]) < ERRO){
+        if(fabs(M[j][j]) < ERRO){ //Caso M[j][j] == 0.
             c = j+1;
             while(c < n && fabs(M[j][c]) < ERRO){
                 c++;
             }
-            if(c < n){
+            if(c < n){ //Trocando as colunas. Também troca as variáveis mudadas no vetor de váriáveis.
                 num = val[j];
                 val[j] = val[c];
                 val[c] = num;
@@ -238,13 +239,13 @@ void metJordan(double **M, int n){
                     M[i][c] = aux;
                 }
             }
-            else{
+            else{ //Caso não haja coluna para mudar, os elementos da coluna ficam 0.
                 for(i = 0; i < n; i++){
                     M[i][j] = 0;
                 }
             }
         }
-        if(M[j][j] != 0){
+        if(M[j][j] != 0){ //Pivotando as linhas.
             for(l = 0; l<n; l++){
                 if(l != j){
                     mult =  (- M[l][j])/M[j][j];
@@ -257,10 +258,10 @@ void metJordan(double **M, int n){
             }
         }
     }
-    printf("Matriz diagonalizada - Metodo de Jordan \n");
+    printf("Matriz diagonalizada - M%ctodo de Jordan \n", 130);
     imprimeMatriz(M, n, n+1);
     solucaoSistema(M, n, x);
-}//metJordan
+}//metJordan()
 
 double calculaFuncao(int grau, double *equacao, double x){
     /*O método retorna o resultado de uma função em um ponto x, ou
@@ -275,8 +276,15 @@ double calculaFuncao(int grau, double *equacao, double x){
 }//calculaFuncao()
 
 void lagrange(int grau, double *coeficientes){
+	/*A função aplica o teorema de Lagrange em uma equação algébrica. Ela 
+	calcula os limites inferiores e superiores onde se encontram as raízes
+	reais positivas e negativas.	
+	*/
 	double encontraK(int grau, double *coeficientes){
-	    int i;
+	    /*Função que retorna o maior índice dentre os índices dos coeficientes
+		negativos de uma equação algébrica. 
+		*/
+		int i;
 	    double aux = 0;
 	    for(i = 0; i < grau ; i++){// Achar raiz superior
 	        if(!(coeficientes[i] >= 0)){
@@ -289,6 +297,9 @@ void lagrange(int grau, double *coeficientes){
 	}
 
 	double encontraB(int grau, double *coeficientes){
+		/*Função que retorna o módulo do menor coeficiente negativo de uma 
+		equação algébrica.
+		*/
 		int i;
 		double aux1 = 0;
 		double modulo = -1;
@@ -303,6 +314,8 @@ void lagrange(int grau, double *coeficientes){
 	}
 
 	void inverteSinal(int n, double *v){
+		/*Função que modifica os vetores de coeficientes caso an < 0.
+		*/
 		int j;
 		for(j=n; j>=0; j--){
 			v[j] = - v[j];
@@ -312,8 +325,8 @@ void lagrange(int grau, double *coeficientes){
 	int i;
     double grau_double = grau, K[4], B[4], an[4], limites[4];
     double *coeficientes_inverso = (double*)malloc(sizeof(double)*(grau+1)); //equação com os indices invertidos
-    double *coeficientes_ex_invertido = (double*)malloc(sizeof(double)*(grau+1));//equação com os expoentes impares invertidos
-    double *coeficientes_ex_invertido_ex = (double*)malloc(sizeof(double)*(grau+1));//equação invertida com os expoentes impares invertidos
+    double *coeficientes_ex_invertido = (double*)malloc(sizeof(double)*(grau+1)); //equação com os expoentes impares invertidos
+    double *coeficientes_ex_invertido_ex = (double*)malloc(sizeof(double)*(grau+1)); //equação invertida com os expoentes impares invertidos
 
     //obtém a equação com os indices invertidos
     for(i = 0; i <= grau ; i++){
@@ -366,7 +379,7 @@ void lagrange(int grau, double *coeficientes){
     limites[3] = -1.0/(1 + pow(B[3]/an[3], 1.0/(grau_double-K[3])));
 
     //Mostra a respota
-    printf("\n\nLimite Positivo: %3.4lf %c%c X+ %c%c %3.4lf \n", limites[1], 60, 61, 60, 61, limites[0]);
+    printf("Limite Positivo: %3.4lf %c%c X+ %c%c %3.4lf \n", limites[1], 60, 61, 60, 61, limites[0]);
     printf("Limite Negativo: %3.4lf %c%c X- %c%c %3.4lf \n", limites[2], 60, 61, 60, 61, limites[3]);
 }//lagrange()
 
@@ -408,32 +421,33 @@ void metBissecao(int grau, double *funcao){
             else b = m;
             i++;
         }
-        if (Fm == 0) printf("Raiz da equação = %lf\n", m);
-        else printf("Raiz aproximada da equação = %7.8lf \n", m);
+        if (Fm == 0) printf("Raiz da equa%c%Co = %lf\n",135, 198, m);
+        else printf("Raiz aproximada da equa%c%co = %7.8lf \n",135, 198, m);
     }
-    else printf("O numero de raízes no intervalo [%lf, %lf] é par\n", a, b);
+    else printf("O n%cmero de raizes no intervalo [%.0lf, %.0lf] %c par\n", 163, a, b, 130);
 }//metBissecao()
 
 int main() {
-    setlocale(LC_ALL, "Portuguese");
     int menu = 1;
     char op;
 
     while(menu){
-        printf("--------EP1--------\n");
-        printf("C - Conversão\n");
+        printf("-----------------------\n");
+        printf("|         EP1         |\n");
+        printf("-----------------------\n");
+		printf("C - Convers%co\n", 198);
         printf("S - Sistema Linear\n");
-        printf("E - Equação Algébrica\n");
+        printf("E - Equa%c%co Alg%cbrica\n", 135, 198, 130);
         printf("F - Finalizar\n");
 
-        printf("-> Digite sua opção: ");
+        printf("\n-> Digite sua op%c%co: ", 135, 198);
         scanf("%c", &op);
         fflush(stdin);
 
         switch(toupper(op)){
             case 'C':
-                printf("\n***Conversão***\n");
-                printf("-> Digite o número decimal a ser convertido: ");
+                printf("\n***Convers%co***\n", 198);
+                printf("-> Digite o n%cmero decimal a ser convertido: ", 163);
                 scanf("%lf", &num);
                 fflush(stdin);
                 conversao(num);
@@ -442,38 +456,42 @@ int main() {
 
             case 'S':
                 printf("\n***Sistema Linear***\n");
-                leMatriz();
-                printf("Matriz: \n");
-                imprimeMatriz(M, n, n+1);
+				leMatriz();
+				if(M != NULL){
+                	printf("Matriz: \n");
+                	imprimeMatriz(M, n, n+1);
+                	printf("\n");
+                	metJordan(M, n);
+                }
                 printf("\n");
-                metJordan(M, n);
                 break;
 
             case 'E':
-                printf("\n***Equação Algébrica***\n");
-                printf("Digite o grau do polinomio: ");
+                printf("\n***Equa%c%co Alg%cbrica***\n", 135, 198, 130);
+                printf("Digite o grau do polin%cmio: ", 147);
                 scanf("%d", &grau);
                 funcao = alocaFuncao(grau);
                 if((funcao[0] > 0 && funcao[n] != 0) && funcao != NULL){
-	                lagrange(grau, funcao);
+	                printf("\nTeorema de Lagrange\n");
+					lagrange(grau, funcao);
+					printf("\nM%ctodo da Bisse%c%co\n", 130, 135, 198);
 	                metBissecao(grau, funcao);
 	            }
 	            else if(funcao == NULL){
-	            	printf("Memória insuficiente!\n");
+	            	printf("Mem%cria insuficiente!\n", 162);
 	            	break;
 				}
-	            else printf("A função deve ter o a%d maior que 0 e a0 diferente de 0", grau);
+	            else printf("\nA fun%c%co deve ter o a%d maior que 0 e a0 diferente de 0!", 135, 198, grau);
                 printf("\n");
                 break;
 
             case 'F':
                 printf("Finalizando...\n");
                 menu = 0;
-                printf("\n");
                 break;
 
             default:
-                printf("Opção inválida!\n");
+                printf("Op%c%co inv%clida!\n", 135, 198, 160);
                 printf("\n");
                 break;
         }
