@@ -1,11 +1,11 @@
 /*
-	1ª Exercício-Programa de Cálculo Numérico
-	Engenharia de Computação - 2018.2
+	1Âª ExercÃ­cio-Programa de CÃ¡lculo NumÃ©rico
+	Engenharia de ComputaÃ§Ã£o - 2018.2
 
-	Equipe: Anathália Maria Moreira Izidro Silva
+	Equipe: AnathÃ¡lia Maria Moreira Izidro Silva
 			Anderson de Alencar Bezzera Souza
 			Francisco Lucas Lima da Silva
-			João Levy Cristian dos Anjos
+			JoÃ£o Levy Cristian dos Anjos
 			Samuel Cabral Lima
 */
 
@@ -16,18 +16,18 @@
 #include <ctype.h>
 #define ERRO 0.00000001
 
-//Variáveis globais
+//VariÃ¡veis globais
 double **M; //armazena a matriz
-double *x; //armazena a solução de um SL
+double *x; //armazena a soluÃ§Ã£o de um SL
 int n;  //armazena a ordem da matriz
-int *val; //armazena os coeficientes de um SL - usado no método de Jordan
-double *funcao; //armazena os coeficientes de uma euação algébrica
-int grau; //armazena o grau de uma equação algébrica
-double num; //armazena o número na base decimal a ser convertido
+int *val; //armazena os coeficientes de um SL - usado no mÃ©todo de Jordan
+double *funcao; //armazena os coeficientes de uma euaÃ§Ã£o algÃ©brica
+int grau; //armazena o grau de uma equaÃ§Ã£o algÃ©brica
+double num; //armazena o nÃºmero na base decimal a ser convertido
 
 double *alocaFuncao(int grau){
-    /*A função lê valores para um vetor de double, alocada
-    dinamicamente, que são coeficientes de uma equação algé-
+    /*A funÃ§Ã£o lÃª valores para um vetor de double, alocada
+    dinamicamente, que sÃ£o coeficientes de uma equaÃ§Ã£o algÃ©-
     brica de grau n.
 	*/
     int i;
@@ -52,10 +52,10 @@ double **alocaMatriz(int l, int c){
 	double **M;
 	int i, j;
 	M = malloc(sizeof(double *)*l);
-	if (M == NULL) return NULL; /*falta de memÃ³ria*/
+	if (M == NULL) return NULL; /*falta de memÃƒÂ³ria*/
 	for (i=0; i<l; i++){
 		M[i] = malloc(sizeof(double)*c);
-		if(M[i] == NULL){ /*falta de memÃ³ria*/
+		if(M[i] == NULL){ /*falta de memÃƒÂ³ria*/
 			for(j=0; j<i; j++){
 				free(M[j]); }
 			free(M);
@@ -66,7 +66,7 @@ double **alocaMatriz(int l, int c){
 }//alocaMatriz()
 
 void leMatriz(){
-	/*A função lê um arquivo de texto contendo um sistema linear de n equações e n variáveis.
+	/*A funÃ§Ã£o lÃª um arquivo de texto contendo um sistema linear de n equaÃ§Ãµes e n variÃ¡veis.
 	*/
     int i, j;
 	FILE *arquivo = NULL;
@@ -75,14 +75,14 @@ void leMatriz(){
 	while(arquivo == NULL){
 		printf("Insira o caminho do arquivo e pressione Enter: \n");
 		fgets(caminhoDoArquivo, sizeof(caminhoDoArquivo), stdin);
-		//Remove o último caractere do caminho, pois o fgets armazena a quebra de linha '\n'
+		//Remove o Ãºltimo caractere do caminho, pois o fgets armazena a quebra de linha '\n'
 		char *p_chr = strchr(caminhoDoArquivo, '\n');
 		if(p_chr != NULL)
 			*p_chr = '\0';
 		arquivo = fopen(caminhoDoArquivo, "r");
 	}
 
-	fscanf(arquivo, "%d", &n); //Lê a primeira linha do arquivo
+	fscanf(arquivo, "%d", &n); //LÃª a primeira linha do arquivo
 
 	M = alocaMatriz(n, n + 1);
 	if(M == NULL)
@@ -111,7 +111,7 @@ void imprimeMatriz(double **M, int l, int c){
 }//imprimeMatriz()
 
 int *alocaVariavel(int n){
-    /*A função aloca um vetor de variáveis de um sistema linear.
+    /*A funÃ§Ã£o aloca um vetor de variÃ¡veis de um sistema linear.
     */
     int i;
     val = malloc(sizeof(int)*n);
@@ -122,8 +122,8 @@ int *alocaVariavel(int n){
 }//alocaVariavel()
 
 void conversao(double num){
-	/*A função converte um número no sistema decimal para os sistemas
-	binário, octal e hexadecimal. 
+	/*A funÃ§Ã£o converte um nÃºmero no sistema decimal para os sistemas
+	binÃ¡rio, octal e hexadecimal. 
 	*/
     int i = 0, j = 1;  //variavel auxiliar
 	int base[3] = {2,8,16};	 //Array de possibilidades
@@ -152,7 +152,7 @@ void conversao(double num){
 			printf("\nHexadecimal: %X.", (int)num);
 		}
 
-		while(j <= precisao && parteFracionaria != 0){ //Imprime a parte fracionária
+		while(j <= precisao && parteFracionaria != 0){ //Imprime a parte fracionÃ¡ria
 			parteFracionaria *= base[i];
 			aux = (int)parteFracionaria;
 
@@ -171,11 +171,11 @@ void conversao(double num){
 }//conversao()
 
 int sretro(double **M, int n){
-	/* Algoritmo de substituição retroativa.
+	/* Algoritmo de substituiÃ§Ã£o retroativa.
 	Recebe m, a matriz aumentada de um SL TS com n variaveis.
-	Se o sistema linear for determinado, armazena em x a solução
+	Se o sistema linear for determinado, armazena em x a soluÃ§Ã£o
 	no SL e devolve 0.
-	Se for indeterminado, armazena em x uma solução do SL e
+	Se for indeterminado, armazena em x uma soluÃ§Ã£o do SL e
 	devolve 1. 
 	*/
 	int i, j, tipo = 0;
@@ -200,7 +200,7 @@ int sretro(double **M, int n){
 }//sretro()
 
 void solucaoSistema(double **M, int n, double *x){
-    /*A função fornece a solução de um sistema linear.
+    /*A funÃ§Ã£o fornece a soluÃ§Ã£o de um sistema linear.
 	*/
     int i, tipo = sretro(M, n);
 	if(tipo == 2){
@@ -214,14 +214,15 @@ void solucaoSistema(double **M, int n, double *x){
 }//solucaoSistema()
 
 void metJordan(double **M, int n){
-    /*A função aplica o metodo de Jordan na matriz M, ou seja,
+    /*A funÃ§Ã£o aplica o metodo de Jordan na matriz M, ou seja,
 	transforma a matriz em uma matriz diagonal. No final,
-	calcula a solução desse SL.
+	calcula a soluÃ§Ã£o desse SL.
     */
     int l, c, k, i, j;
     double mult, aux, num;
     x = malloc(sizeof(double)*n);
     val = alocaVariavel(n);
+	print(val)
 
     for(j=0; j<n; j++){
         if(fabs(M[j][j]) < ERRO){ //Caso M[j][j] == 0.
@@ -229,7 +230,7 @@ void metJordan(double **M, int n){
             while(c < n && fabs(M[j][c]) < ERRO){
                 c++;
             }
-            if(c < n){ //Trocando as colunas. Também troca as variáveis mudadas no vetor de váriáveis.
+            if(c < n){ //Trocando as colunas. TambÃ©m troca as variÃ¡veis mudadas no vetor de vÃ¡riÃ¡veis.
                 num = val[j];
                 val[j] = val[c];
                 val[c] = num;
@@ -239,7 +240,7 @@ void metJordan(double **M, int n){
                     M[i][c] = aux;
                 }
             }
-            else{ //Caso não haja coluna para mudar, os elementos da coluna ficam 0.
+            else{ //Caso nÃ£o haja coluna para mudar, os elementos da coluna ficam 0.
                 for(i = 0; i < n; i++){
                     M[i][j] = 0;
                 }
@@ -264,8 +265,8 @@ void metJordan(double **M, int n){
 }//metJordan()
 
 double calculaFuncao(int grau, double *equacao, double x){
-    /*O método retorna o resultado de uma função em um ponto x, ou
-    seja, seja f a função e x o ponto, o método calcula f(x).
+    /*O mÃ©todo retorna o resultado de uma funÃ§Ã£o em um ponto x, ou
+    seja, seja f a funÃ§Ã£o e x o ponto, o mÃ©todo calcula f(x).
 	*/
     int i;
     double resp = 0;
@@ -276,13 +277,13 @@ double calculaFuncao(int grau, double *equacao, double x){
 }//calculaFuncao()
 
 void lagrange(int grau, double *coeficientes){
-	/*A função aplica o teorema de Lagrange em uma equação algébrica. Ela 
-	calcula os limites inferiores e superiores onde se encontram as raízes
+	/*A funÃ§Ã£o aplica o teorema de Lagrange em uma equaÃ§Ã£o algÃ©brica. Ela 
+	calcula os limites inferiores e superiores onde se encontram as raÃ­zes
 	reais positivas e negativas.	
 	*/
 	double encontraK(int grau, double *coeficientes){
-	    /*Função que retorna o maior índice dentre os índices dos coeficientes
-		negativos de uma equação algébrica. 
+	    /*FunÃ§Ã£o que retorna o maior Ã­ndice dentre os Ã­ndices dos coeficientes
+		negativos de uma equaÃ§Ã£o algÃ©brica. 
 		*/
 		int i;
 	    double aux = 0;
@@ -297,8 +298,8 @@ void lagrange(int grau, double *coeficientes){
 	}
 
 	double encontraB(int grau, double *coeficientes){
-		/*Função que retorna o módulo do menor coeficiente negativo de uma 
-		equação algébrica.
+		/*FunÃ§Ã£o que retorna o mÃ³dulo do menor coeficiente negativo de uma 
+		equaÃ§Ã£o algÃ©brica.
 		*/
 		int i;
 		double aux1 = 0;
@@ -314,7 +315,7 @@ void lagrange(int grau, double *coeficientes){
 	}
 
 	void inverteSinal(int n, double *v){
-		/*Função que modifica os vetores de coeficientes caso an < 0.
+		/*FunÃ§Ã£o que modifica os vetores de coeficientes caso an < 0.
 		*/
 		int j;
 		for(j=n; j>=0; j--){
@@ -324,16 +325,16 @@ void lagrange(int grau, double *coeficientes){
 
 	int i;
     double grau_double = grau, K[4], B[4], an[4], limites[4];
-    double *coeficientes_inverso = (double*)malloc(sizeof(double)*(grau+1)); //equação com os indices invertidos
-    double *coeficientes_ex_invertido = (double*)malloc(sizeof(double)*(grau+1)); //equação com os expoentes impares invertidos
-    double *coeficientes_ex_invertido_ex = (double*)malloc(sizeof(double)*(grau+1)); //equação invertida com os expoentes impares invertidos
+    double *coeficientes_inverso = (double*)malloc(sizeof(double)*(grau+1)); //equaÃ§Ã£o com os indices invertidos
+    double *coeficientes_ex_invertido = (double*)malloc(sizeof(double)*(grau+1)); //equaÃ§Ã£o com os expoentes impares invertidos
+    double *coeficientes_ex_invertido_ex = (double*)malloc(sizeof(double)*(grau+1)); //equaÃ§Ã£o invertida com os expoentes impares invertidos
 
-    //obtém a equação com os indices invertidos
+    //obtÃ©m a equaÃ§Ã£o com os indices invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_inverso[i] = coeficientes[grau-i];
     }
 
-    //obtém a equação com os expoentes impares invertidos
+    //obtÃ©m a equaÃ§Ã£o com os expoentes impares invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_ex_invertido[i] = coeficientes[i];
         if(i%2 != 0 && i != 0){
@@ -341,7 +342,7 @@ void lagrange(int grau, double *coeficientes){
         }
     }
 
-    //obtém a equação invertida com os expoentes impares invertidos
+    //obtÃ©m a equaÃ§Ã£o invertida com os expoentes impares invertidos
     for(i = 0; i <= grau ; i++){
         coeficientes_ex_invertido_ex[i] = coeficientes_ex_invertido[grau-i];
     }
@@ -384,9 +385,9 @@ void lagrange(int grau, double *coeficientes){
 }//lagrange()
 
 int bolzano(double a, double b, int grau, double *funcao){
-    /*A função verifica se entre os intervalos dados, existe
-    uma quantidade ímpar de raízes numa equação algébrica.
-	Caso positivo, retorna 1. Se não, retorna 0.
+    /*A funÃ§Ã£o verifica se entre os intervalos dados, existe
+    uma quantidade Ã­mpar de raÃ­zes numa equaÃ§Ã£o algÃ©brica.
+	Caso positivo, retorna 1. Se nÃ£o, retorna 0.
 	*/
     double Fa, Fb;
     Fa = calculaFuncao(grau, funcao, a);
@@ -398,8 +399,8 @@ int bolzano(double a, double b, int grau, double *funcao){
 }//bolzano()
 
 void metBissecao(int grau, double *funcao){
-    /*A função aplica o método da bisseção em uma equação algébrica
-    dado um intervalo de observação.
+    /*A funÃ§Ã£o aplica o mÃ©todo da bisseÃ§Ã£o em uma equaÃ§Ã£o algÃ©brica
+    dado um intervalo de observaÃ§Ã£o.
 	*/
     double a, b, m, erro, Fa, Fb, Fm = 1, i = 0;
     printf("Defina o intervalo: ");
